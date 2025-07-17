@@ -8,18 +8,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use App\Models\User;
+use App\Http\Requests\Register_request ;
+use App\Http\Requests\Login_request ;
 
 class AuthController extends Controller
 {
     // User or Owner Registration
-    public function register(Request $request)
+    public function register(Register_request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|in:user,owner',
-        ]);
+        $validated = $request->validated();
 
         $user = User::create([
             'name' => $request->name,
@@ -38,12 +35,9 @@ class AuthController extends Controller
     }
 
     // Login with email/password
-    public function login(Request $request)
+    public function login(Login_request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $validated = $request->validated();
 
         $user = User::where('email', $request->email)->first();
 
