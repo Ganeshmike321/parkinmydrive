@@ -2,56 +2,83 @@
 
 namespace App\Http\Controllers\Api;
 
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use App\Models\User;
+use Illuminate\Validation\Rule; 
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Register_request ;
 use App\Http\Requests\Login_request ;
+// use Illuminate\Http\JsonResponse;
+
 
 class AuthController extends Controller
 {
     // User or Owner Registration
-    public function register(Register_request $request)
+    public function register(Request $request)
     {
-        $validated = $request->validated();
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
+      
+        $validator = Validator::make($request->all(), [
+            'name'=>['required', 'min:3','max:255'],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')
+            ],
+            'mobile' => [
+                'required',
+                'numeric',
+                Rule::unique('users', 'mobile')
+            ],
+            
+            'password'=>[
+                'required',
+                'confirmed'
+            ]
         ]);
+        if ($validator->fails()) {
+            $validation_error = validation_api_errors_message($validator->errors()->messages());
+             return $this->sendapiError($validation_error,400);
+         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+     $user = new  User();
+     $user-> name = $request->name;
+     $user-> email = $request->email;
+     $user-> mobile = $request->mobile;
+     $user-> password = Hash::make($request->password);
+     $user->save();
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user,
-        ], 201);
-    }
+
+
+     return $this->sendResponse([],'User Created Successfully.',200); 
+     }
 
     // Login with email/password
     public function login(Login_request $request)
     {
-        $validated = $request->validated();
+      
+       
+        
+    // At this point, validation has already happened!
 
-        $user = User::where('email', $request->email)->first();
+    // Get credentials
+    $credentials = $request->only('email', 'password');
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
-        }
+    // Find user by email
+    $user = \App\Models\User::where('email', $credentials['email'])->first();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+    // Check if user exists and password matches
+    if (!$user || !\Hash::check($credentials['password'], $user->password)) {
+        return $this->sendapiError('Invalid credentials', 401);
+    }
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user,
-        ]);
+    // If you want, you can return user data (but not password!)
+    return $this->sendResponse(['user' => $user->only(['id', 'name', 'email', 'mobile', 'role'])], 'User logged in successfully.', 200);
+
     }
 
     // Logout current session

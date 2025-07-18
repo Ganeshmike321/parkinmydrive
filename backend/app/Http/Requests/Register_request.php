@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule; 
+
 
 class Register_request extends FormRequest
 {
@@ -26,12 +28,12 @@ class Register_request extends FormRequest
             'email' => [
                 'required',
                 'email',
-                Rule::unique('user', 'email')
+                Rule::unique('users', 'email')
             ],
             'mobile' => [
                 'required',
                 'number',
-                Rule::unique('user', 'mobile')
+                Rule::unique('users', 'mobile')
             ],
             
             'password'=>[
@@ -42,3 +44,4 @@ class Register_request extends FormRequest
         ];
     }
 }
+
