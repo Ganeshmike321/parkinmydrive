@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 import { toast } from "react-toastify";
 
 interface RegisterProps {
-  onDataChange: (value: boolean) => void;
+  onDataChange?: (value: boolean) => void;
 }
 
 interface RegisterFormData {
@@ -27,7 +27,7 @@ interface RegisterFormErrors {
 
 const Register = ({ onDataChange }: RegisterProps) => {
   const sendDataToParent = (val: boolean) => {
-    onDataChange(val);
+    onDataChange?.(val);
   };
 
   const navigate = useNavigate();

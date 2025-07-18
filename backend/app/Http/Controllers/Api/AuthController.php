@@ -60,25 +60,21 @@ class AuthController extends Controller
     // Login with email/password
     public function login(Login_request $request)
     {
-      
-       
-        
-    // At this point, validation has already happened!
+        $credentials = $request->only('email', 'password');
+        $user = \App\Models\User::where('email', $credentials['email'])->first();
 
-    // Get credentials
-    $credentials = $request->only('email', 'password');
+        if (!$user || !\Hash::check($credentials['password'], $user->password)) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Invalid credentials'
+            ], 401);
+        }
 
-    // Find user by email
-    $user = \App\Models\User::where('email', $credentials['email'])->first();
-
-    // Check if user exists and password matches
-    if (!$user || !\Hash::check($credentials['password'], $user->password)) {
-        return $this->sendapiError('Invalid credentials', 401);
-    }
-
-    // If you want, you can return user data (but not password!)
-    return $this->sendResponse(['user' => $user->only(['id', 'name', 'email', 'mobile', 'role'])], 'User logged in successfully.', 200);
-
+        return response()->json([
+            'success' => true,
+            'user' => $user->only(['id', 'name', 'email', 'mobile', 'role']),
+            'message' => 'User logged in successfully.'
+        ], 200);
     }
 
     // Logout current session
