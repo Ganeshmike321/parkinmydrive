@@ -15,7 +15,7 @@ Route::apiResource('users', UserController::class);
 Route::apiResource('bookings', BookingController::class);
 Route::apiResource('parking-spots', ParkingSpotController::class);
 
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register' , [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/password/reset', [AuthController::class, 'sendPasswordResetEmail']);

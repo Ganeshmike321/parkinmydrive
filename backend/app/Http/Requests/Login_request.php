@@ -11,7 +11,7 @@ class Login_request extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /** 
@@ -25,7 +25,7 @@ class Login_request extends FormRequest
             'email' => [
                 'required',
                 'email',
-                Rule::unique('user', 'email')
+               
             ],
             'password'=>[
                 'required',

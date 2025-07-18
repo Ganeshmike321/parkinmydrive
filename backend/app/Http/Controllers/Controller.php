@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+// echo "Debuging Tools" ;
+// exit;
+
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;

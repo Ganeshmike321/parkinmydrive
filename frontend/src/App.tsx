@@ -100,6 +100,8 @@
   import Header from './components/Header';
   import OwnerAxiosClientResponseHandler from './axios/OwnerAxiosClientResponseHandler';
   import ValidateToken from './context/ValidateToken';
+  import { ToastContainer } from "react-toastify";
+  import "react-toastify/dist/ReactToastify.css";
 
   // Types
   interface ImportMetaEnv {
@@ -175,6 +177,17 @@
             <ValidateToken>
               <Header ref={headerRef} />
               <AppRoutes />
+              <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
             </ValidateToken>
           </OwnerAxiosClientResponseHandler>
         </AuthProvider>
