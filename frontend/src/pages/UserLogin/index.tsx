@@ -139,8 +139,8 @@ const UserLogin = (): React.ReactElement => {
                                 </div>
                               </div>
                             )}
-                            {!isAuthenticated && logginClicked && <Login onDataChange={handleDataChange} />}
-                            {!isAuthenticated && signUpClicked && <Register onDataChange={handleDataChange} />}
+                            {!isAuthenticated && logginClicked && <Login />}
+                            {!isAuthenticated && signUpClicked && <Register />}
                             {!signUpClicked && (
                               <>
                                 <div className="col-xl-12 col-md-12 mb-2">
